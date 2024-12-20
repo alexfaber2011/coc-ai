@@ -1,0 +1,261 @@
+{
+  "name": "coc-ai",
+  "version": "0.0.0-development",
+  "description": "",
+  "author": "Kuro Latency <oozorakuro409@gmail.com>",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "keywords": [
+    "coc.nvim"
+  ],
+  "engines": {
+    "coc": "^0.0.82"
+  },
+  "scripts": {
+    "watch": "node esbuild.mjs --watch",
+    "build": "node esbuild.mjs",
+    "prepare": "node esbuild.mjs"
+  },
+  "devDependencies": {
+    "coc.nvim": "^0.0.83-next.18",
+    "esbuild": "^0.24.0",
+    "eslint": "^9.13.0",
+    "log4js": "^6.9.1",
+    "typescript": "^5.6.2"
+  },
+  "activationEvents": [
+    "*"
+  ],
+  "contributes": {
+    "configuration": {
+      "type": "object",
+      "title": "coc-ai configuration",
+      "properties": {
+        "coc-ai.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable coc-ai extension"
+        },
+        "coc-ai.global.model": {
+          "type": "string",
+          "default": "gpt-4o-mini",
+          "description": "Model name for coc-ai global default(see https://platform.openai.com/docs/api-reference/completions)"
+        },
+        "coc-ai.global.endpointUrl": {
+          "type": "string",
+          "default": "https://api.openai.com/v1/chat/completions",
+          "description": "Model API endpoint URL for coc-ai global default"
+        },
+        "coc-ai.global.proxy": {
+          "type": "string",
+          "default": "",
+          "description": "Proxy for endpointUrl(example: socks://127.0.0.1:1080)"
+        },
+        "coc-ai.global.maxTokens": {
+          "type": "number",
+          "default": null,
+          "description": "Max token for coc-ai global default, 0 for unlimited"
+        },
+        "coc-ai.global.temperature": {
+          "type": "number",
+          "default": 0.3,
+          "description": "Model temperature for coc-ai global default"
+        },
+        "coc-ai.global.requestTimeout": {
+          "type": "number",
+          "default": 20,
+          "description": "Timeout for coc-ai global default"
+        },
+        "coc-ai.global.requiresAuth": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether requires authentitation for coc-ai global default"
+        },
+        "coc-ai.global.initialPrompt": {
+          "type": "string",
+          "description": "Placeholder, do NOT change! Use engine-specific option."
+        },
+        "coc-ai.global.pasteMode": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable paste mode for coc-ai global default(not implemented yet)"
+        },
+        "coc-ai.global.tokenPath": {
+          "type": "string",
+          "default": "~/.vim/coc-ai.token",
+          "description": "Path to your coc-ai api token file"
+        },
+        "coc-ai.global.rolesConfigPath": {
+          "type": "string",
+          "default": "~/.vim/vimrc.d/vim-ai.ini",
+          "description": "Path to your roles config file"
+        },
+        "coc-ai.chat.model": {
+          "type": "string",
+          "description": "Model name for coc-ai global default"
+        },
+        "coc-ai.chat.endpointUrl": {
+          "type": "string",
+          "description": "Model API endpoint URL for AI chat"
+        },
+        "coc-ai.chat.proxy": {
+          "type": "string",
+          "description": "Proxy for AI chat endpointUrl"
+        },
+        "coc-ai.chat.maxTokens": {
+          "type": "number",
+          "default": null,
+          "description": "Max token for AI chat, 0 for unlimited"
+        },
+        "coc-ai.chat.temperature": {
+          "type": "number",
+          "default": 0.3,
+          "description": "Model temperature for AI chat"
+        },
+        "coc-ai.chat.requestTimeout": {
+          "type": "number",
+          "default": 20,
+          "description": "Timeout for AI chat"
+        },
+        "coc-ai.chat.requiresAuth": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether requires authentitation for AI chat"
+        },
+        "coc-ai.chat.initialPrompt": {
+          "type": "string",
+          "default": ">>> system\n\nYou are a helpful code assistant\nAssume that all unknown symbols are properly initialized elsewhere\nAdd a syntax type after ``` to enable proper syntax highlighting in fenced code blocks",
+          "description": "Initial chat prompt"
+        },
+        "coc-ai.chat.pasteMode": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable paste mode for AI chat(not implemented yet)"
+        },
+        "coc-ai.chat.codeSyntaxEnabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether highlights code block in AI chat"
+        },
+        "coc-ai.chat.populatesOptions": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether polulates options to the chat header"
+        },
+        "coc-ai.chat.preserveFocus": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether go back to current buffer after open chat window"
+        },
+        "coc-ai.chat.openChatCommand": {
+          "type": "string",
+          "default": "preset_below",
+          "description": "Preset (preset_below, preset_tab, preset_right) or a custom command"
+        },
+        "coc-ai.chat.scratchBufferKeepOpen": {
+          "type": "boolean",
+          "default": false,
+          "description": "Re-use scratch buffer within the vim session"
+        },
+        "coc-ai.edit.model": {
+          "type": "string",
+          "description": "Model name for AI edit"
+        },
+        "coc-ai.edit.endpointUrl": {
+          "type": "string",
+          "description": "Model API endpoint URL for AI edit"
+        },
+        "coc-ai.edit.proxy": {
+          "type": "string",
+          "description": "Proxy for AI edit endpointUrl"
+        },
+        "coc-ai.edit.maxTokens": {
+          "type": "number",
+          "default": null,
+          "description": "Max token for AI edit, 0 for unlimited"
+        },
+        "coc-ai.edit.temperature": {
+          "type": "number",
+          "default": 0.1,
+          "description": "Model temperature for AI edit"
+        },
+        "coc-ai.edit.requestTimeout": {
+          "type": "number",
+          "default": 20,
+          "description": "Timeout for AI edit"
+        },
+        "coc-ai.edit.requiresAuth": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether requires authentitation for AI edit"
+        },
+        "coc-ai.edit.initialPrompt": {
+          "type": "string",
+          "default": ">>> system\n\nYou will act as a code generator.\nDo not write any introduction, conclusion, or explanation.\nDo not use fenced code blocks.",
+          "description": "Initial edit prompt"
+        },
+        "coc-ai.edit.pasteMode": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable paste mode for AI edit(not implemented yet)"
+        },
+        "coc-ai.complete.model": {
+          "type": "string",
+          "description": "Model name for AI complete"
+        },
+        "coc-ai.complete.endpointUrl": {
+          "type": "string",
+          "description": "Model API endpoint URL for AI complete"
+        },
+        "coc-ai.complete.proxy": {
+          "type": "string",
+          "description": "Proxy for AI complete endpointUrl"
+        },
+        "coc-ai.complete.maxTokens": {
+          "type": "number",
+          "default": null,
+          "description": "Max token for AI complete, 0 for unlimited"
+        },
+        "coc-ai.complete.temperature": {
+          "type": "number",
+          "default": 0.1,
+          "description": "Model temperature for AI complete"
+        },
+        "coc-ai.complete.requestTimeout": {
+          "type": "number",
+          "default": 20,
+          "description": "Timeout for AI complete"
+        },
+        "coc-ai.complete.requiresAuth": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether requires authentitation for AI complete"
+        },
+        "coc-ai.complete.initialPrompt": {
+          "type": "string",
+          "default": ">>> system\n\nYou will act as a code generator.\nDo not write any introduction, conclusion, or explanation.\nDo not use fenced code blocks.",
+          "description": "Initial complete prompt"
+        },
+        "coc-ai.complete.pasteMode": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable paste mode for AI complete(not implemented yet)"
+        }
+      }
+    },
+    "commands": [
+      {
+        "command": "coc-ai.Command",
+        "title": "coc-ai command title"
+      }
+    ]
+  },
+  "dependencies": {
+    "@chemzqm/neovim": "^6.1.2",
+    "@types/ini": "^4.1.1",
+    "@types/node": "^22.7.7",
+    "fast-glob": "^3.3.2",
+    "ini": "^4.1.1",
+    "vscode-uri": "^3.0.8"
+  }
+}

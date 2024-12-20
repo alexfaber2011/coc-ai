@@ -1,0 +1,12 @@
+lib
+node_modules/
+
+coc-settings.json
+.netrwhist
+
+*.aichat
+*.swp
+
+**/tbd
+**/tmp
+vim-ai/
