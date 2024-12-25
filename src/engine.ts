@@ -90,11 +90,10 @@ export class Engine {
       clearTimeout(timeout);
       const reader = resp.body.getReader();
       const decoder = new TextDecoder('utf-8');
-      const buffer = ''; // TODO
+      let buffer = '';
 
       while (true) {
         const { done, value } = await reader.read();
-        // TODO: 确认done的时候value是什么，通过buffer handle data不完整的情况
         if (done || this.controller.signal.aborted) break;
 
         const data = decoder.decode(value, {stream: true});
@@ -105,12 +104,20 @@ export class Engine {
           if (line === '[DONE]') continue;
 
           try {
+            if (buffer) {
+              line = buffer + line;
+              buffer = '';
+            }
             const parsed = JSON.parse(line);
-          if (parsed.choices?.[0]?.delta?.content) {
-            yield parsed.choices[0].delta.content as string;
+            if (parsed.choices?.[0]?.delta?.content) {
+              yield parsed.choices[0].delta.content as string;
             }
           } catch (error) {
-            window.showErrorMessage(`Error during decoding:${error}`);
+            if (buffer) {
+              window.showErrorMessage(`Error during decoding:${error}`);
+            } else {
+              buffer += line;  // in case json row scattered across two chunks
+            }
           }
         }
       }
