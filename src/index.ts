@@ -1,6 +1,6 @@
-import { commands, ExtensionContext, window, workspace } from 'coc.nvim';
+import { commands, ExtensionContext, workspace } from 'coc.nvim';
 
-import { AIChats } from './aichat';
+import { AIChats, hideChat } from './aichat';
 import { getRoles } from './roles';
 
 const config = workspace.getConfiguration('coc-ai');
@@ -32,13 +32,8 @@ export async function activate(context: ExtensionContext) {
     }),
     workspace.registerAutocmd({
       event: 'BufWinLeave',
-      pattern: '*AI*chat*',
-      request: true,
-      callback: async () => {
-        const bufnr = await nvim.call('bufnr', '%') as number;
-        (await aichats.getChat(bufnr)).hide();
-        window.showInformationMessage(`Leave aichat with bufnr: ${bufnr}`);
-      },
+      pattern: '>>>?AI?chat*',
+      callback: async () => { await hideChat(aichats) },
     }),
   );
 }

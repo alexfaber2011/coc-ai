@@ -7,9 +7,9 @@ import { breakUndoSequence, moveToBottom, moveToLineEnd, resolveIncludeMessage }
 const { nvim } = workspace;
 
 const chatPreset: IChatPreset = {
-  "preset_below": "below new",
-  "preset_tab": "tabnew",
-  "preset_right": "rightbelow 55vnew | setlocal noequalalways | setlocal winfixwidth",
+  "preset_below": "below new {}",
+  "preset_tab": "tabnew {}",
+  "preset_right": "rightbelow 55vnew {} | setlocal noequalalways | setlocal winfixwidth",
 }
 
 export class AIChats implements Disposable {
@@ -102,6 +102,13 @@ export class AIChats implements Disposable {
     this.#chats.clear();
     this.#bufnrs.length = 0;
   }
+}
+
+export async function hideChat(aichats: AIChats) {
+  const bufnr = await nvim.call('bufnr', '%') as number;
+  try {
+    (await aichats.getChat(bufnr)).hide();
+  } catch {}
 }
 
 abstract class Task {
@@ -338,9 +345,10 @@ export class AIChat implements Task, Disposable {
     const status = await this.#tryResumeWindow();
     if (!status) {
       const command = this.#openChatCMD in chatPreset
-        ? chatPreset[this.#openChatCMD]
-        : this.#openChatCMD;
-      await nvim.command(`${command} ${this.name}`);
+        ? chatPreset[this.#openChatCMD].replace(/{}/, this.name)
+        : `${this.#openChatCMD} ${this.name}`;
+      window.showInformationMessage(command);
+      await nvim.command(command);
 
       this.bufnr = await nvim.call('bufnr', '%');
 
