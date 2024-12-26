@@ -75,11 +75,6 @@
           "type": "string",
           "description": "Placeholder, do NOT change! Use engine-specific option."
         },
-        "coc-ai.global.pasteMode": {
-          "type": "boolean",
-          "default": true,
-          "description": "Enable paste mode for coc-ai global default(not implemented yet)"
-        },
         "coc-ai.global.tokenPath": {
           "type": "string",
           "default": "~/.vim/coc-ai.token",
@@ -126,11 +121,6 @@
           "type": "string",
           "default": ">>> system\n\nYou are a helpful code assistant\nAssume that all unknown symbols are properly initialized elsewhere\nAdd a syntax type after ``` to enable proper syntax highlighting in fenced code blocks",
           "description": "Initial chat prompt"
-        },
-        "coc-ai.chat.pasteMode": {
-          "type": "boolean",
-          "default": true,
-          "description": "Enable paste mode for AI chat(not implemented yet)"
         },
         "coc-ai.chat.codeSyntaxEnabled": {
           "type": "boolean",
@@ -194,11 +184,6 @@
           "default": ">>> system\n\nYou will act as a code generator.\nDo not write any introduction, conclusion, or explanation.\nDo not use fenced code blocks.",
           "description": "Initial edit prompt"
         },
-        "coc-ai.edit.pasteMode": {
-          "type": "boolean",
-          "default": true,
-          "description": "Enable paste mode for AI edit(not implemented yet)"
-        },
         "coc-ai.complete.model": {
           "type": "string",
           "description": "Model name for AI complete"
@@ -235,11 +220,6 @@
           "type": "string",
           "default": ">>> system\n\nYou will act as a code generator.\nDo not write any introduction, conclusion, or explanation.\nDo not use fenced code blocks.",
           "description": "Initial complete prompt"
-        },
-        "coc-ai.complete.pasteMode": {
-          "type": "boolean",
-          "default": true,
-          "description": "Enable paste mode for AI complete(not implemented yet)"
         }
       }
     },

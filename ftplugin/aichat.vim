@@ -113,8 +113,7 @@ function! s:IsHighlightSourcesEnabledForBuffer()
 endfunction
 
 function! s:MarkdownRefreshSyntax(force)
-  call vim_ai_config#load()
-  if g:vim_ai_chat_default['ui']['code_syntax_enabled'] && &filetype =~# 'aichat'
+  if b:coc_ai_chat_syntax_enabled && &filetype =~# 'aichat'
     call s:MarkdownHighlightSources(a:force)
     call s:MarkdownHighlightChatOptions(a:force)
   endif
@@ -124,6 +123,9 @@ endfunction
 function! s:MarkdownClearSyntaxVariables()
   if exists('b:aichat_included_filetypes')
     unlet! b:aichat_included_filetypes
+  endif
+  if exists('b:coc_ai_chat_syntax_enabled')
+    unlet! b:coc_ai_chat_syntax_enabled
   endif
 endfunction
 

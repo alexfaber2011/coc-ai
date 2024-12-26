@@ -33,7 +33,6 @@ interface IEngineConfig {
   requestTimeout: number,
   requiresAuth: boolean,
   initialPrompt: string | string[],
-  pasteMode: boolean, // TODO: no effect
   tokenPath: string,
   rolesConfigPath: string,
 
@@ -52,7 +51,6 @@ interface IOptions {
   temperature?: number,
   requestTimeout?: number,
   initialPrompt?: string | string[],
-  pasteMode?: boolean,
 }
 
 interface IChatPreset {

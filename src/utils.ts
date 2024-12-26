@@ -72,5 +72,10 @@ export function sleep(interval: number): Promise<void> {
 
 export async function moveToBottom(bufnr: number) {
   const winid: number = await nvim.call('bufwinid', bufnr);
-  await nvim.call('win_execute', [winid, 'normal! G']);
+  await nvim.call('win_execute', [winid, 'normal! G$']);
+}
+
+export async function moveToLineEnd(bufnr: number) {
+  const winid: number = await nvim.call('bufwinid', bufnr);
+  await nvim.call('win_execute', [winid, 'normal! $']);
 }
