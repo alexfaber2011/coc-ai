@@ -1,3 +1,4 @@
+import path from 'path';
 import { commands, ExtensionContext, workspace } from 'coc.nvim';
 
 import { AIChats, hideChat } from './aichat';
@@ -9,6 +10,9 @@ const { nvim } = workspace;
 export async function activate(context: ExtensionContext) {
   const enabled = config.get<boolean>('enabled', true);
   if (!enabled) { return };
+  const directory = path.resolve(__dirname, '..').replace(/'/g, "''");
+  nvim.command(`execute 'noa set rtp+='.fnameescape('${directory}')`, true)
+  nvim.command(`source ${directory}/plugin/*.vim`, true)
   console.debug('coc-ai loaded!');
 
   const aichats = new AIChats();
