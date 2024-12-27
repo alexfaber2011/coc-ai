@@ -37,6 +37,7 @@ interface IEngineConfig {
   rolesConfigPath: string,
 
   // chat
+  autoScroll?: boolean,
   codeSyntaxEnabled?: boolean,
   preserveFocus?: boolean,
   populatesOptions?: boolean,

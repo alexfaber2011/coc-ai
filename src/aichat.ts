@@ -128,6 +128,7 @@ export class AIChat implements Task, Disposable {
   config: IEngineConfig;
   #bufnr: number = -1;
   #engine: Engine;
+  #autoScroll: boolean;
   #keepOpen: boolean;
   #openChatCMD: string;
   #codeSyntaxEnabled: boolean;
@@ -135,7 +136,8 @@ export class AIChat implements Task, Disposable {
   constructor(public name = '>>> AI chat') {
     this.#engine = new Engine('chat');
     this.config = this.#engine.config;
-    this.#keepOpen = this.config.scratchBufferKeepOpen as boolean;
+    this.#autoScroll = this.config.autoScroll!;
+    this.#keepOpen = this.config.scratchBufferKeepOpen!;
     this.#openChatCMD = this.config.openChatCommand!;
     this.#codeSyntaxEnabled = this.config.codeSyntaxEnabled!;
   }
@@ -218,9 +220,9 @@ export class AIChat implements Task, Disposable {
     nvim.call('setbufline', [this.name, '$', lastline], true);
     if (append.length) {
       nvim.call('appendbufline', [this.name, '$', append], true);
-      moveToBottom(this.bufnr);
+      if (this.#autoScroll) moveToBottom(this.bufnr);
     } else {
-      moveToLineEnd(this.bufnr);
+      if (this.#autoScroll) moveToLineEnd(this.bufnr);
     }
     nvim.resumeNotification(true, true);
   }
@@ -231,7 +233,6 @@ export class AIChat implements Task, Disposable {
       this.append('\n\n');
     }
     this.append(value + '\n\n');
-    moveToBottom(this.bufnr);
   }
 
   async #getRoleLineIndex() {

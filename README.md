@@ -15,7 +15,7 @@ I would like to express my gratitude to the original author for their work.
 ## TODOs
 
 - [ ] proxy for post request
-- [ ] option for chat whether keep track with cursor
+- [x] option for chat whether keep track with cursor
 - [ ] implement ai complete
 - [ ] implement ai edit
 - [x] support `CocInstall`

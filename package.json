@@ -115,6 +115,11 @@
           "default": ">>> system\n\nYou are a helpful code assistant\nAssume that all unknown symbols are properly initialized elsewhere\nAdd a syntax type after ``` to enable proper syntax highlighting in fenced code blocks",
           "description": "Initial chat prompt"
         },
+        "coc-ai.chat.autoScroll": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether window auto scrolls"
+        },
         "coc-ai.chat.codeSyntaxEnabled": {
           "type": "boolean",
           "default": true,
