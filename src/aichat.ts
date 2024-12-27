@@ -177,7 +177,7 @@ export class AIChat implements Task, Disposable {
     }
 
     if (prompt) messages.push({ role: "user", content: prompt });
-    if (!messages.length || messages[messages.length - 1].role !== 'user') {
+    if (messages[messages.length - 1].role !== 'user') {
       window.showInformationMessage('No new incoming user message found, skipped.')
       this.breakUndoSequence();
       return
@@ -187,6 +187,8 @@ export class AIChat implements Task, Disposable {
     let mergedConfig: IEngineConfig
     if (chatOptions) mergedConfig = this.engine.mergeOptions(chatOptions);
     mergedConfig = this.engine.mergeOptions(options); // in case no options offerd
+
+    messages.unshift({role: "system", content: mergedConfig.initialPrompt});
     const data: IAPIOptions = {
       model: mergedConfig.model,
       messages: messages,

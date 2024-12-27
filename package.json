@@ -112,8 +112,8 @@
         },
         "coc-ai.chat.initialPrompt": {
           "type": "string",
-          "default": ">>> system\n\nYou are a helpful code assistant\nAssume that all unknown symbols are properly initialized elsewhere\nAdd a syntax type after ``` to enable proper syntax highlighting in fenced code blocks",
-          "description": "Initial chat prompt"
+          "default": "You are a helpful code assistant\nAssume that all unknown symbols are properly initialized elsewhere\nAdd a syntax type after ``` to enable proper syntax highlighting in fenced code blocks",
+          "description": "Initial chat prompt as system role"
         },
         "coc-ai.chat.autoScroll": {
           "type": "boolean",
@@ -179,8 +179,8 @@
         },
         "coc-ai.edit.initialPrompt": {
           "type": "string",
-          "default": ">>> system\n\nYou will act as a code generator.\nDo not write any introduction, conclusion, or explanation.\nDo not use fenced code blocks.",
-          "description": "Initial edit prompt"
+          "default": "You will act as a code generator.\nDo not write any introduction, conclusion, or explanation.\nDo not use fenced code blocks.",
+          "description": "Initial edit prompt as system role"
         },
         "coc-ai.complete.model": {
           "type": "string",
@@ -216,8 +216,8 @@
         },
         "coc-ai.complete.initialPrompt": {
           "type": "string",
-          "default": ">>> system\n\nYou will act as a code generator.\nDo not write any introduction, conclusion, or explanation.\nDo not use fenced code blocks.",
-          "description": "Initial complete prompt"
+          "default": "You will act as a code generator.\nDo not write any introduction, conclusion, or explanation.\nDo not use fenced code blocks.",
+          "description": "Initial complete prompt as system role"
         }
       }
     },

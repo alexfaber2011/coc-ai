@@ -32,7 +32,7 @@ interface IEngineConfig {
   temperature: number,
   requestTimeout: number,
   requiresAuth: boolean,
-  initialPrompt: string | string[],
+  initialPrompt: string,
   tokenPath: string,
   rolesConfigPath: string,
 
@@ -51,7 +51,7 @@ interface IOptions {
   maxTokens?: number,
   temperature?: number,
   requestTimeout?: number,
-  initialPrompt?: string | string[],
+  initialPrompt?: string,
 }
 
 interface IChatPreset {

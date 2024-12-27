@@ -28,9 +28,6 @@ export class Engine {
 
   #normalizeEngineConfig(engineConfig: IEngineConfig): IEngineConfig {
     engineConfig.tokenPath = engineConfig.tokenPath.replace(/^~/, os.homedir());
-    if (typeof engineConfig.initialPrompt === 'string') {
-      engineConfig.initialPrompt = engineConfig.initialPrompt.split('\n');
-    }
     return engineConfig;
   }
 
