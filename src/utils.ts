@@ -75,7 +75,8 @@ export async function moveToBottom(bufnr: number) {
   await nvim.call('win_execute', [winid, 'normal! G$']);
 }
 
-export async function moveToLineEnd(bufnr: number) {
+export async function moveToLineEnd(bufnr: number, line?: number) {
   const winid: number = await nvim.call('bufwinid', bufnr);
-  await nvim.call('win_execute', [winid, 'normal! $']);
+  const cmd = line ? `normal! ${line}G$` : 'normal!$';
+  await nvim.call('win_execute', [winid, cmd]);
 }

@@ -10,7 +10,7 @@ const chatPreset: IChatPreset = {
   "preset_below": "below new {}",
   "preset_tab": "tabnew {}",
   "preset_right": "rightbelow 55vnew {} | setlocal noequalalways | setlocal winfixwidth",
-}
+};
 
 export class AIChats implements Disposable {
   capacity: number;
@@ -203,13 +203,13 @@ export class AIChat implements Task, Disposable {
     for await (const chunk of resp) {
       if (chunk.type === 'reasoning_content') {
         if (!isReasoning) {
-          this.append('\n---reason start---\n');
+          await this.appendBlock('---reason start---');
           isReasoning = true;
         }
         this.append(chunk.content);
       } else {
         if (isReasoning) {
-          this.append('\n---reason finish---\n\n');
+          await this.appendBlock('---reason finish---');
           isReasoning = false;
         }
         this.append(chunk.content);
@@ -407,10 +407,12 @@ export class AIChat implements Task, Disposable {
    */
   async breakUndoSequence() {
     const currBufnr = await nvim.call('bufnr', '%');
-    const currWinid = await nvim.call('bufwinid', '%');
     if (currBufnr != this.bufnr) await this.#tryResumeWindow();
     await breakUndoSequence();
-    if (currBufnr != this.bufnr) await nvim.call('win_gotoid', currWinid);
+    if (currBufnr != this.bufnr) {
+      const currWinid = await nvim.call('bufwinid', '%');
+      await nvim.call('win_gotoid', currWinid);
+    }
   }
 
   dispose() {}
