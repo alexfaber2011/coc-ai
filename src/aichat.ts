@@ -199,7 +199,22 @@ export class AIChat implements Task, Disposable {
 
     let resp = this.engine.generate(mergedConfig, data)
     await this.appendBlock('<<< assistant');
-    for await (const chunk of resp) this.append(chunk);
+    let isReasoning = false;
+    for await (const chunk of resp) {
+      if (chunk.type === 'reasoning_content') {
+        if (!isReasoning) {
+          this.append('\n---reason start---\n');
+          isReasoning = true;
+        }
+        this.append(chunk.content);
+      } else {
+        if (isReasoning) {
+          this.append('\n---reason finish---\n\n');
+          isReasoning = false;
+        }
+        this.append(chunk.content);
+      }
+    }
     await this.appendBlock('>>> user');
     await this.breakUndoSequence();
   }

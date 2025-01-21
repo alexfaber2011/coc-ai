@@ -59,3 +59,8 @@ interface IChatPreset {
   preset_tab: string,
   preset_right: string,
 }
+
+interface IChunk {
+  type: 'content' | 'reasoning_content',
+  content: string,
+}

@@ -106,8 +106,18 @@ export class Engine {
               buffer = '';
             }
             const parsed = JSON.parse(line);
-            if (parsed.choices?.[0]?.delta?.content) {
-              yield parsed.choices[0].delta.content as string;
+            if (parsed.choices?.[0]?.delta?.reasoning_content) {
+              let chunk: IChunk = {
+                type: 'reasoning_content',
+                content: parsed.choices[0].delta.reasoning_content as string,
+              };
+              yield chunk;
+            } else if (parsed.choices?.[0]?.delta?.content) {
+              let chunk: IChunk = {
+                type: 'content',
+                content: parsed.choices[0].delta.content as string,
+              };
+              yield chunk;
             }
           } catch (error) {
             if (buffer) {
