@@ -2,6 +2,7 @@ import path from 'path';
 import { commands, ExtensionContext, workspace } from 'coc.nvim';
 
 import { AIChats, hideChat } from './aichat';
+import { AIEdit } from './aiedit';
 import { getRoles } from './roles';
 
 const config = workspace.getConfiguration('coc-ai');
@@ -16,12 +17,22 @@ export async function activate(context: ExtensionContext) {
   console.debug('coc-ai loaded!');
 
   const aichats = new AIChats();
+  const aiedit = new AIEdit();
   context.subscriptions.push(
     commands.registerCommand('coc-ai.chat', async (selection: string, rawPrompt: string) => {
       const bufList = await nvim.call('tabpagebuflist') as number[];
       const bufnr = bufList.filter(x => aichats.includes(x)).pop();
       const aichat = await aichats.getChat(bufnr, bufnr ? false : true);
       await aichat.run(selection, rawPrompt);
+    }),
+    commands.registerCommand('coc-ai.edit', async (selection: string, rawPrompt: string) => {
+      await aiedit.run(selection, rawPrompt);
+    }),
+    commands.registerCommand('coc-ai.complete', async (selection: string, rawPrompt: string) => {
+      const linenr = await nvim.call('line', '.');
+      await aiedit.run(selection, rawPrompt);
+      await nvim.command(`normal! ${linenr}G$`);
+      nvim.redrawVim();
     }),
     commands.registerCommand('coc-ai.show', async () => {
       await aichats.getChat(undefined, true);

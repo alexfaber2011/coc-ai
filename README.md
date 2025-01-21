@@ -16,8 +16,8 @@ I would like to express my gratitude to the original author for their work.
 
 - [ ] proxy for post request
 - [x] option for chat whether keep track with cursor
-- [ ] implement ai complete
-- [ ] implement ai edit
+- [x] implement ai complete
+- [x] implement ai edit
 - [x] support `CocInstall`
 - [ ] README
 - [ ] auto attach with `.aichat` files

@@ -45,7 +45,6 @@ function! coc_ai#AIRun(uses_range, ...) range abort
     execute "normal! " . a:lastline . "Go"
   endif
   call CocActionAsync('runCommand', 'coc-ai.complete', l:selection, l:instruction)
-  execute "normal! " . a:lastline . "G"
 endfunction
 
 " - uses_range   - true if range passed
