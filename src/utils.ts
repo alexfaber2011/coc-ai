@@ -10,6 +10,9 @@ const { nvim } = workspace;
 const controller = transferableAbortController();
 export const AbortController = controller.constructor as typeof globalThis.AbortController;
 
+export const ReasonStart = '---reason start---';
+export const ReasonFinish = '---reason finish---';
+
 export class KnownError extends Error {}
 
 export async function breakUndoSequence() {

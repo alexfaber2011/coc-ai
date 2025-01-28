@@ -3,7 +3,8 @@ import { events, window, workspace, Disposable } from 'coc.nvim';
 import { Engine } from './engine';
 import { Task } from './task';
 import { parseTaskRole } from './roles';
-import { breakUndoSequence, moveToBottom, moveToLineEnd, resolveIncludeMessage } from './utils';
+import { breakUndoSequence, moveToBottom, moveToLineEnd, resolveIncludeMessage,
+         ReasonStart, ReasonFinish } from './utils';
 
 const { nvim } = workspace;
 
@@ -193,13 +194,13 @@ export class AIChat implements Task, Disposable {
     for await (const chunk of resp) {
       if (chunk.type === 'reasoning_content') {
         if (!isReasoning) {
-          await this.appendBlock('---reason start---');
+          await this.appendBlock(ReasonStart);
           isReasoning = true;
         }
         this.append(chunk.content);
       } else {
         if (isReasoning) {
-          await this.appendBlock('---reason finish---');
+          await this.appendBlock(ReasonFinish);
           isReasoning = false;
         }
         this.append(chunk.content);
@@ -279,6 +280,7 @@ export class AIChat implements Task, Disposable {
   async #parseChatMessages(start: number | null) {
     const lines: string[] = await nvim.call('getbufline', [this.name , start ?? 1, '$']);
     let messages: IMessage[] = [];
+    let isReasoning = false;
     for (const line of lines) {
       if (line.startsWith('>>> system')) {
         messages.push({ role: 'system', content: '' });
@@ -296,9 +298,13 @@ export class AIChat implements Task, Disposable {
         messages.push({ role: 'assistant', content: '' });
         continue;
       }
-      if (!messages.length) {
+      if (!messages.length) continue;
+      if (line.trim() === ReasonStart) isReasoning = true;
+      if (line.trim() === ReasonFinish) {
+        isReasoning = false;
         continue;
       }
+      if (isReasoning) continue;
       messages[messages.length - 1].content += '\n' + line;
     }
 
