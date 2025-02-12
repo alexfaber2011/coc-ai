@@ -9,7 +9,8 @@
     "coc.nvim"
   ],
   "engines": {
-    "coc": "^0.0.82"
+    "coc": "^0.0.82",
+    "node": ">=18.0.0"
   },
   "scripts": {
     "watch": "tsc --watch",

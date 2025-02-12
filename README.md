@@ -10,7 +10,8 @@ I would like to express my gratitude to the original author for their work.
 
 ## Install
 
-`:CocInstall https://github.com/Kuro96/coc-ai`
+    1. Ensure your node version is newer than 18: `node --version`
+    2. Use command `:CocInstall https://github.com/Kuro96/coc-ai` in your vim
 
 ## TODOs
 
