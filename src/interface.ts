@@ -1,5 +1,5 @@
 interface IRoleConfig {
-  prompt: string,
+  prompt?: string,
   options?: IOptions,              // global/merged
   'options-chat'?: IOptions,       // chat
   'options-complete'?: IOptions,   // complete

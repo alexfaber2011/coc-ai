@@ -18,6 +18,7 @@ export async function activate(context: ExtensionContext) {
 
   const aichats = new AIChats();
   const aiedit = new AIEdit();
+  const aicomplete = new AIEdit('complete');
   context.subscriptions.push(
     commands.registerCommand('coc-ai.chat', async (selection: string, rawPrompt: string) => {
       const bufList = await nvim.call('tabpagebuflist') as number[];
@@ -30,7 +31,7 @@ export async function activate(context: ExtensionContext) {
     }),
     commands.registerCommand('coc-ai.complete', async (selection: string, rawPrompt: string) => {
       const linenr = await nvim.call('line', '.');
-      await aiedit.run(selection, rawPrompt);
+      await aicomplete.run(selection, rawPrompt);
       await nvim.command(`normal! ${linenr}G$`);
       nvim.redrawVim();
     }),

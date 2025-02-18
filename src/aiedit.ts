@@ -14,7 +14,7 @@ export class AIEdit implements Task, Disposable {
   currLine = '';
   #engine: Engine;
 
-  constructor() {
+  constructor(public task: 'edit'|'complete' = 'edit') {
     this.#engine = new Engine('edit');
     this.config = this.#engine.config;
   }
@@ -27,7 +27,7 @@ export class AIEdit implements Task, Disposable {
     this.currLine = await nvim.call('getline', '.');
 
     const sep = selection === '' || rawPrompt === '' ? '' : ':\n';
-    let { prompt, options } = parseTaskRole(rawPrompt);
+    let { prompt, options } = parseTaskRole(rawPrompt, this.task);
     prompt = prompt + sep + selection;  // role.prompt + user prompt + selection
 
     let mergedConfig = this.engine.mergeOptions(options); // in case no options offerd

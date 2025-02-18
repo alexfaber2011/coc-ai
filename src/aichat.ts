@@ -150,7 +150,7 @@ export class AIChat implements Task, Disposable {
 
   async run(selection: string, rawPrompt: string) {
     const sep = selection === '' || rawPrompt === '' ? '' : ':\n';
-    let { prompt, options } = parseTaskRole(rawPrompt);
+    let { prompt, options } = parseTaskRole(rawPrompt, 'chat');
     prompt = prompt + sep + selection;  // role.prompt + user prompt + selection
 
     const { messages, chatOptions } = await this.parseContent();
