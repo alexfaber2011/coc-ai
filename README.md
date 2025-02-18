@@ -33,9 +33,9 @@ prompt = "<extra prompt which will be add to user prompt>"
 [<your role name>.options]
 model = "<model name>"
 proxy = "<protocol>://<ip>:<port>"  # NOT available for now
-maxTokens = <max token num>
-temperature = <temperature>
-requestTimeout = <timout in seconds>
+maxTokens = 4096  # <max token num>
+temperature = 0.6  # <temperature>
+requestTimeout = 20  # <timout in seconds>
 initialPrompt = "<overrides `initialPrompt` in coc-settings>"
 
 [<your role name>.options-chat]
@@ -59,20 +59,20 @@ Available options, checkout
 model = "<model name>"
 endpointUrl = "<protocol>://<hostname>/v1/chat/completions"
 proxy = "<protocol>://<ip>:<port>"  # NOT available for now
-maxTokens = <max token num>,
-temperature = <temperature>,
+maxTokens = 4096  # <max token num>
+temperature = 0.6  # <temperature>
+requestTimeout = 20  # <timout in seconds>
 
-requestTimeout = <timout in seconds>
-requiresAuth = <boolean>
+requiresAuth = true  # <boolean>
 initialPrompt = "<overrides `initialPrompt` in coc-settings>"
 tokenPath = "<path to your token file>"
 rolesConfigPath = "<path to your roles config path>"
-autoScroll = <boolean>
-codeSyntaxEnabled = <boolean>
-preserveFocus = <boolean>
-populatesOptions = <boolean>
+autoScroll = true  # <boolean>
+codeSyntaxEnabled = true  # <boolean>
+preserveFocus =  true  # <boolean>
+populatesOptions = false  # <boolean>
 openChatCommand = "<preset_below|preset_tab|preset_right|<your own command>>"
-scratchBufferKeepOpen = <boolean>
+scratchBufferKeepOpen = false  # <boolean>
 ```
 
 ### Coc options
