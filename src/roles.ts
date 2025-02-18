@@ -1,6 +1,6 @@
 import * as os from 'os';
 import * as fs from 'fs';
-import * as ini from 'ini';
+import * as toml from '@iarna/toml';
 
 import { defaultEngineConfig } from './engine';
 import {mergeDefault} from './utils';
@@ -10,7 +10,7 @@ export function getRoles() {
   rolesConfigPath = rolesConfigPath.replace(/^~/, os.homedir())
   try {
     const content = fs.readFileSync(rolesConfigPath, 'utf-8');
-    const roles: Record<string, IRoleConfig> = ini.parse(content);
+    const roles: Record<string, IRoleConfig> = toml.parse(content) as Record<string, any>;
     return roles;
   } catch (e) {
     console.error(`Error reading ini file: ${e}`);
