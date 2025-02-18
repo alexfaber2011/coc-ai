@@ -45,7 +45,7 @@ export class Engine {
         apiKeyParamValue = apiKeyParamValue || fs.readFileSync(this.config.tokenPath, 'utf-8');
       } catch (error) {}
       if (!apiKeyParamValue) {
-        throw new Error("Missing OpenAI API key");
+        throw new Error("Missing API key");
       }
 
       const elements = apiKeyParamValue.trim().split(',');

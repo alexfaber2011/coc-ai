@@ -32,12 +32,12 @@
         },
         "coc-ai.global.model": {
           "type": "string",
-          "default": "gpt-4o-mini",
+          "default": "deepseek-chat",
           "description": "Model name for coc-ai global default(see https://platform.openai.com/docs/api-reference/completions)"
         },
         "coc-ai.global.endpointUrl": {
           "type": "string",
-          "default": "https://api.openai.com/v1/chat/completions",
+          "default": "https://api.deepseek.com/v1/chat/completions",
           "description": "Model API endpoint URL for coc-ai global default"
         },
         "coc-ai.global.proxy": {

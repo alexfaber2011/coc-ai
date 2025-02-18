@@ -20,12 +20,27 @@ export async function breakUndoSequence() {
 }
 
 export function mergeDefault<T>(defaultConfig: T, updates: Partial<T>): T {
-  const cleanedConfig = Object.keys(updates).reduce((cfg, key) => {
-    const value = updates[key as keyof T];
-    if (value !== '') cfg[key] = value; // not override in case of prompt or something alike
-    return cfg;
-  }, JSON.parse(JSON.stringify(defaultConfig)));
-  return cleanedConfig;
+  const isObject = (obj: any): obj is object => obj && typeof obj === 'object' && !Array.isArray(obj);
+  const merge = (target: any, source: any): any => {
+    if (isObject(target) && isObject(source)) {
+      for (const key in source) {
+        if (source.hasOwnProperty(key)) {
+          if (isObject(source[key])) {
+            if (!target[key]) Object.assign(target, { [key]: {} });
+            merge(target[key], source[key]);
+          } else {
+            if (key.includes('rompt') || source[key] !== '') {
+              target[key] = source[key];
+            }
+          }
+        }
+      }
+    }
+    return target;
+  };
+
+  const cleanedConfig = JSON.parse(JSON.stringify(defaultConfig));
+  return merge(cleanedConfig, updates);
 }
 
 export function resolveIncludeMessage(message: IMessage) {

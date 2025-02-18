@@ -20,20 +20,39 @@ export function getRoles() {
 
 export function parseTaskRole(rawPrompt: string, task?: 'chat' | 'complete' | 'edit' ): IRoleConfig {
   rawPrompt = rawPrompt.trim();
-  let roleName = rawPrompt.split(' ')[0];
-  if (!roleName.startsWith('/')) return { prompt: rawPrompt };
-  roleName = roleName.slice(1);
+  if (!rawPrompt.startsWith('/')) return { prompt: rawPrompt };
+
+  const parts = rawPrompt.trim().split(/[^\S\r\n]+/);
+  const roleNames: string[] = [];
+  let promptParts: string[] = [];
+  let i = 0;
+  while (i < parts.length) {
+    const currentPart = parts[i];
+    if (currentPart.startsWith('/')) {
+      roleNames.push(currentPart.slice(1));
+      i++;
+    } else {
+      promptParts = parts.slice(i);
+      break;
+    }
+  }
+  let prompt = promptParts.join(' ');
+
   const roles = getRoles();
-  const role = roles ? roles[roleName] : null;
-  if (!role) return { prompt: rawPrompt };
+  let roleConfig: IRoleConfig = {};
+  for (const roleName of roleNames) {
+    const role = roles ? roles[roleName] : null;
+    if (role) roleConfig = mergeDefault(roleConfig, role);
+  }
 
-  let prompt = rawPrompt.slice(roleName.length).trim();
-  if (role.prompt) prompt = role.prompt + ':\n' + prompt;
-
-  let options = role.options ? role.options : {};
-  if (task) {
-    const taskOptions = role[`options-${task}`];
-    if (taskOptions) options = mergeDefault(options, taskOptions);
+  let options: IOptions = {};
+  if (Object.keys(roleConfig).length) {
+    if (roleConfig.prompt) prompt = roleConfig.prompt + ':\n' + prompt;
+    if (roleConfig.options) options = roleConfig.options;
+    if (task) {
+      const taskOptions = roleConfig[`options-${task}`];
+      if (taskOptions) options = mergeDefault(options, taskOptions);
+    }
   }
   return { prompt, options };
 }
