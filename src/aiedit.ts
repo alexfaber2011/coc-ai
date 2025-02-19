@@ -15,7 +15,7 @@ export class AIEdit implements Task, Disposable {
   #engine: Engine;
 
   constructor(public task: 'edit'|'complete' = 'edit') {
-    this.#engine = new Engine('edit');
+    this.#engine = new Engine(task);
     this.config = this.#engine.config;
   }
 
