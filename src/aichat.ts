@@ -191,23 +191,28 @@ export class AIChat implements Task, Disposable {
     let resp = this.engine.generate(mergedConfig, data)
     await this.appendBlock('<<< assistant');
     let isReasoning = false;
-    for await (const chunk of resp) {
-      if (chunk.type === 'reasoning_content') {
-        if (!isReasoning) {
-          await this.appendBlock(ReasonStart);
-          isReasoning = true;
+    try {
+      for await (const chunk of resp) {
+        if (chunk.type === 'reasoning_content') {
+          if (!isReasoning) {
+            await this.appendBlock(ReasonStart);
+            isReasoning = true;
+          }
+          this.append(chunk.content);
+        } else {
+          if (isReasoning) {
+            await this.appendBlock(ReasonFinish);
+            isReasoning = false;
+          }
+          this.append(chunk.content);
         }
-        this.append(chunk.content);
-      } else {
-        if (isReasoning) {
-          await this.appendBlock(ReasonFinish);
-          isReasoning = false;
-        }
-        this.append(chunk.content);
       }
+    } catch (e) {
+      if (!(e instanceof Error && e.name === 'AbortError')) throw e;
+    } finally {
+      await this.appendBlock('>>> user');
+      await this.breakUndoSequence();
     }
-    await this.appendBlock('>>> user');
-    await this.breakUndoSequence();
   }
 
   get engine(): Engine { return this.#engine }
@@ -406,7 +411,7 @@ export class AIChat implements Task, Disposable {
     if (currBufnr != this.bufnr) await this.#tryResumeWindow();
     await breakUndoSequence();
     if (currBufnr != this.bufnr) {
-      const currWinid = await nvim.call('bufwinid', '%');
+      const currWinid = await nvim.call('bufwinid', currBufnr);
       await nvim.call('win_gotoid', currWinid);
     }
   }
