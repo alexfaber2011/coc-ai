@@ -2,7 +2,7 @@
 prompt = "fix spelling and grammar"
 
 [refactor]
-prompt ="""\
+prompt = """\
   You are a Clean Code expert, I have the following code, \
   please refactor it in a more clean and concise way so that my colleagues \
   can maintain the code more easily. Also, explain why you want to refactor \
@@ -12,8 +12,9 @@ prompt ="""\
 [explain]
 prompt = """\
   Explain the following code snippet, but not line by line. \
-  Give a general overview of the code: why it might have been implemented this way, its purpose, its quirks, and possible improvements, if any.\
-"""
+  Give a general overview of the code: \
+  why it might have been implemented this way, its purpose, its quirks, and possible improvements, if any.\
+  """
 
 [review]
 prompt = """\
@@ -23,7 +24,7 @@ prompt = """\
   performance and scalability issues, or anything that seems questionable. \
   For each mistake found, explain what is wrong and how to correct or improve it. \
   Give your answer as one bullet point per mistake found.\
-"""
+  """
 
 # common options for all engines
 [refactor.options]

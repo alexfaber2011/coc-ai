@@ -71,12 +71,12 @@
         },
         "coc-ai.global.tokenPath": {
           "type": "string",
-          "default": "~/.vim/coc-ai.token",
+          "default": "~/.vim/vimrc.d/coc-ai-token.toml",
           "description": "Path to your coc-ai api token file"
         },
         "coc-ai.global.rolesConfigPath": {
           "type": "string",
-          "default": "~/.vim/vimrc.d/vim-ai.ini",
+          "default": "~/.vim/vimrc.d/coc-ai-roles.toml",
           "description": "Path to your roles config file"
         },
         "coc-ai.chat.model": {
