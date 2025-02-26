@@ -53,9 +53,10 @@ export class Engine {
   }
 
   async * generate(requestConfig: IEngineConfig, data: IAPIOptions) {
+    this.config = requestConfig;
     const headers = {
       'Content-Type': 'application/json',
-      ...(requestConfig.requiresAuth && {
+      ...(this.config.requiresAuth && {
         'Authorization': `Bearer ${this.token.apiKey}`,
         ...(this.token.orgId && { 'OpenAI-Organization': this.token.orgId })
       })
@@ -69,7 +70,7 @@ export class Engine {
     }, this.config.requestTimeout * 1000);
 
     try {
-      const resp = await fetch(requestConfig.endpointUrl, {
+      const resp = await fetch(this.config.endpointUrl, {
         method: 'post',
         body,
         headers,
