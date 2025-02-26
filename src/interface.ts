@@ -47,10 +47,12 @@ interface IEngineConfig {
 
 interface IOptions {
   model?: string,
+  endpointUrl?: string,
+  requiresAuth?: boolean,
+  tokenPath?: string,
   proxy?: string,
   maxTokens?: number,
   temperature?: number,
-  requestTimeout?: number,
   initialPrompt?: string,
 }
 

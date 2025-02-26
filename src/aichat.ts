@@ -1,10 +1,13 @@
 import { events, window, workspace, Disposable } from 'coc.nvim';
+import * as toml from '@iarna/toml';
 
 import { Engine } from './engine';
 import { Task } from './task';
 import { parseTaskRole } from './roles';
-import { breakUndoSequence, moveToBottom, moveToLineEnd, resolveIncludeMessage,
-         REASON_START, REASON_FINISH } from './utils';
+import {
+  breakUndoSequence, moveToBottom, moveToLineEnd, resolveIncludeMessage,
+  CHAT_TABLE, REASON_START, REASON_FINISH,
+} from './utils';
 
 const { nvim } = workspace;
 
@@ -122,6 +125,7 @@ export class AIChat implements Task, Disposable {
   #autoScroll: boolean;
   #keepOpen: boolean;
   #openChatCMD: string;
+  #populatesOptions: boolean;
   #codeSyntaxEnabled: boolean;
 
   constructor(public name = '>>> AI chat') {
@@ -130,6 +134,7 @@ export class AIChat implements Task, Disposable {
     this.#autoScroll = this.config.autoScroll!;
     this.#keepOpen = this.config.scratchBufferKeepOpen!;
     this.#openChatCMD = this.config.openChatCommand!;
+    this.#populatesOptions = this.config.populatesOptions!;
     this.#codeSyntaxEnabled = this.config.codeSyntaxEnabled!;
   }
 
@@ -140,12 +145,29 @@ export class AIChat implements Task, Disposable {
   }
 
   async parseContent() {
-    const indexHeaderEnd = await this.#getRoleLineIndex();
+    const indexHeaderEnd = await this.#getRoleLineIndex(); // starts from 0
     const chatOptions = await this.#parseChatHeaderOptions(indexHeaderEnd);
-    const indexMsgStart = indexHeaderEnd ? indexHeaderEnd + 1 : 1;
+    const indexMsgStart = indexHeaderEnd + 1;
     const messages = await this.#parseChatMessages(indexMsgStart);
+    if (this.#populatesOptions && indexHeaderEnd === 0) this.populateOptions();
 
     return { messages, chatOptions }
+  }
+
+  async populateOptions() {
+    let options: IOptions = {
+      model: this.engine.config.model,
+      endpointUrl: this.engine.config.endpointUrl,
+      requiresAuth: this.engine.config.requiresAuth,
+      tokenPath: this.engine.config.tokenPath,
+      proxy: this.engine.config.proxy,
+      maxTokens: this.engine.config.maxTokens,
+      temperature: this.engine.config.temperature,
+      initialPrompt: this.engine.config.initialPrompt,
+    };
+    let headers = toml.stringify(options as any).split('\n');
+    headers.unshift(`[${CHAT_TABLE}]`);
+    await nvim.call('appendbufline', [this.name, 0, headers]);
   }
 
   async run(selection: string, rawPrompt: string) {
@@ -250,32 +272,20 @@ export class AIChat implements Task, Disposable {
 
   async #getRoleLineIndex() {
     let lines: string[] = await nvim.call('getbufline', [this.name, 1, '$']);
-    let idx = -1;
+    let idx = 0;
     for (let i = 0; i < lines.length; i++) {
       if (lines[i].startsWith('>>>')) {
         idx = i;
         break;
       }
     }
-    return idx === -1 ? null : idx
+    return idx
   }
 
   async #parseChatHeaderOptions(end: number | null) {
     try {
-      const options: IOptions = {};
       let lines: string[] = await nvim.call('getbufline', [this.name, 1, end ?? '$']);
-      lines = lines.filter(p => p.trim() !== '');
-      if (lines[0] !== '[chat-options]') return;
-
-      for (const line of lines.slice(1)) {
-        if (line.startsWith('#')) continue;
-        let [key, value] = line.trim().split('=').map(x => x.trim());
-        if (key in ['maxTokens', 'temperature', 'requestTimeout']) {
-          options[key] = Number(value);
-        } else {
-          options[key] = value;
-        }
-      }
+      const options: IOptions = toml.parse(lines.join('\n'));
       return options;
     } catch (error) {
       window.showInformationMessage('Invalid [chat-options]', 'error');

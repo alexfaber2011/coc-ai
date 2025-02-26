@@ -10,6 +10,7 @@ const { nvim } = workspace;
 const controller = transferableAbortController();
 export const AbortController = controller.constructor as typeof globalThis.AbortController;
 
+export const CHAT_TABLE = 'chat-options';
 export const REASON_START = '<think>';
 export const REASON_FINISH = '</think>';
 
