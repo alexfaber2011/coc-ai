@@ -113,7 +113,7 @@ function! s:IsHighlightSourcesEnabledForBuffer()
 endfunction
 
 function! s:MarkdownRefreshSyntax(force)
-  if b:coc_ai_chat_syntax_enabled && &filetype =~# 'aichat'
+  if get(g:, 'coc_ai_chat_syntax_enabled', 1) && &filetype =~# 'aichat'
     call s:MarkdownHighlightSources(a:force)
     call s:MarkdownHighlightChatOptions(a:force)
   endif
