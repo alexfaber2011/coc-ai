@@ -10,7 +10,6 @@ export const defaultEngineConfig = config.get<IEngineConfig>('global')!;
 export class Engine {
   config: IEngineConfig;
   controller: AbortController;
-  #token?: IToken;
 
   constructor(public configName: 'chat' | 'edit' | 'complete') {
     this.config = this.#initEngineConfig()
@@ -39,21 +38,18 @@ export class Engine {
   }
 
   get token(): IToken {
-    if (this.#token === undefined) {
-      let apiKeyParamValue = process.env.OPENAI_API_KEY;
-      try {
-        apiKeyParamValue = apiKeyParamValue || fs.readFileSync(this.config.tokenPath, 'utf-8');
-      } catch (error) {}
-      if (!apiKeyParamValue) {
-        throw new Error("Missing API key");
-      }
-
-      const elements = apiKeyParamValue.trim().split(',');
-      const apiKey = elements[0].trim();
-      const orgId = elements.length > 1 ? elements[1].trim() : null;
-      this.#token = { apiKey, orgId };
+    let apiKeyParamValue: string = '';
+    try {
+      apiKeyParamValue = fs.readFileSync(this.config.tokenPath, 'utf-8');
+    } catch (error) {}
+    if (!apiKeyParamValue) {
+      throw new Error("Missing API key");
     }
-    return this.#token
+
+    const elements = apiKeyParamValue.trim().split(',');
+    const apiKey = elements[0].trim();
+    const orgId = elements.length > 1 ? elements[1].trim() : null;
+    return { apiKey, orgId }
   }
 
   async * generate(requestConfig: IEngineConfig, data: IAPIOptions) {
