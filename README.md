@@ -24,7 +24,7 @@ hint for miserable CentOS users: [Node.js unofficial-builds project](https://git
 See `roles-example.toml`.
 Make a copy of your own and specify path to it with `coc-ai.global.rolesConfigPath`.
 
-Available Options, only `prompt` is **REQUIRED**:
+Available Options, all options are optional:
 
 ```toml
 [<your role name>]
@@ -32,10 +32,12 @@ prompt = "<extra prompt which will be add to user prompt>"
 
 [<your role name>.options]
 model = "<model name>"
+endpointUrl = "<protocol>://<hostname>/v1/chat/completions"
+requiresAuth = <true/false>
+tokenPath = <path to your token file>
 proxy = "<protocol>://<ip>:<port>"  # NOT available for now
 maxTokens = 4096  # <max token num>
 temperature = 0.6  # <temperature>
-requestTimeout = 20  # <timout in seconds>
 initialPrompt = "<overrides `initialPrompt` in coc-settings>"
 
 [<your role name>.options-chat]
@@ -50,30 +52,10 @@ initialPrompt = "<overrides `initialPrompt` in coc-settings>"
 
 ### Chat Options
 
-**ONLY** available with `AIChat` command.
+Same as role options, but **ONLY** available with `AIChat` command.
 
-Available options, checkout
- [package.json](https://github.com/Kuro96/coc-ai/blob/main/package.json) for detail:
-
-```toml
-model = "<model name>"
-endpointUrl = "<protocol>://<hostname>/v1/chat/completions"
-proxy = "<protocol>://<ip>:<port>"  # NOT available for now
-maxTokens = 4096  # <max token num>
-temperature = 0.6  # <temperature>
-requestTimeout = 20  # <timout in seconds>
-
-requiresAuth = true  # <boolean>
-initialPrompt = "<overrides `initialPrompt` in coc-settings>"
-tokenPath = "<path to your token file>"
-rolesConfigPath = "<path to your roles config path>"
-autoScroll = true  # <boolean>
-codeSyntaxEnabled = true  # <boolean>
-preserveFocus =  true  # <boolean>
-populatesOptions = false  # <boolean>
-openChatCommand = "<preset_below|preset_tab|preset_right|<your own command>>"
-scratchBufferKeepOpen = false  # <boolean>
-```
+Put it on top of ai chat window, or simply modify after one conversation
+with `coc-ai.chat.populatesOptions` set to `true`.
 
 ### Coc options
 
@@ -120,6 +102,7 @@ NOTE:
 ### Examples
 
 ```viml
+:AIC hello world
 :AIC /r1 who are you?
 :%AIC /gpt-4o-mini /explain 用中文回答
 ```
