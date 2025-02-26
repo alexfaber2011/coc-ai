@@ -4,7 +4,7 @@ import { Engine } from './engine';
 import { Task } from './task';
 import { parseTaskRole } from './roles';
 import { breakUndoSequence, moveToBottom, moveToLineEnd, resolveIncludeMessage,
-         ReasonStart, ReasonFinish } from './utils';
+         REASON_START, REASON_FINISH } from './utils';
 
 const { nvim } = workspace;
 
@@ -195,13 +195,13 @@ export class AIChat implements Task, Disposable {
       for await (const chunk of resp) {
         if (chunk.type === 'reasoning_content') {
           if (!isReasoning) {
-            await this.appendBlock(ReasonStart);
+            await this.appendBlock(REASON_START);
             isReasoning = true;
           }
           this.append(chunk.content);
         } else {
           if (isReasoning) {
-            await this.appendBlock(ReasonFinish);
+            await this.appendBlock(REASON_FINISH);
             isReasoning = false;
           }
           this.append(chunk.content);
@@ -304,8 +304,8 @@ export class AIChat implements Task, Disposable {
         continue;
       }
       if (!messages.length) continue;
-      if (line.trim() === ReasonStart) isReasoning = true;
-      if (line.trim() === ReasonFinish) {
+      if (line.trim() === REASON_START) isReasoning = true;
+      if (line.trim() === REASON_FINISH) {
         isReasoning = false;
         continue;
       }

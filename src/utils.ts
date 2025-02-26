@@ -10,8 +10,8 @@ const { nvim } = workspace;
 const controller = transferableAbortController();
 export const AbortController = controller.constructor as typeof globalThis.AbortController;
 
-export const ReasonStart = '---reason start---';
-export const ReasonFinish = '---reason finish---';
+export const REASON_START = '<think>';
+export const REASON_FINISH = '</think>';
 
 export class KnownError extends Error {}
 
