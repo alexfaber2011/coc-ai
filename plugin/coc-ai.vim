@@ -1,4 +1,5 @@
 autocmd BufRead,BufNewFile *.aichat set filetype=aichat
+autocmd BufRead,BufNewFile *.aichat call CocActionAsync('runCommand', 'coc-ai.attachChat')
 
 command! -range -nargs=? -complete=customlist,coc_ai#RoleCompletion AI        <line1>,<line2>call coc_ai#AIRun(<range>, <q-args>)
 command! -range -nargs=? -complete=customlist,coc_ai#RoleCompletion AIEdit    <line1>,<line2>call coc_ai#AIEditRun(<range>, <q-args>)

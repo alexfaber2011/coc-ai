@@ -115,7 +115,7 @@ NOTE:
 - [x] implement ai edit
 - [x] support `CocInstall`
 - [x] README
-- [ ] auto attach with `.aichat` files
+- [x] auto attach with `.aichat` files
 - [ ] maybe auto-complete?
 - [ ] AI abstraction for chats?
 

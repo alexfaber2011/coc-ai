@@ -23,7 +23,7 @@ export async function activate(context: ExtensionContext) {
     commands.registerCommand('coc-ai.chat', async (selection: string, rawPrompt: string) => {
       const bufList = await nvim.call('tabpagebuflist') as number[];
       const bufnr = bufList.filter(x => aichats.includes(x)).pop();
-      const aichat = await aichats.getChat(bufnr, bufnr ? false : true);
+      const aichat = await aichats.getChat({ bufnr, init: bufnr ? false : true });
       await aichat.run(selection, rawPrompt);
     }),
     commands.registerCommand('coc-ai.edit', async (selection: string, rawPrompt: string) => {
@@ -35,11 +35,15 @@ export async function activate(context: ExtensionContext) {
       await nvim.command(`normal! ${linenr}G$`);
       nvim.redrawVim();
     }),
+    commands.registerCommand('coc-ai.attachChat', async() => {
+      const name = await nvim.call('bufname', '%');
+      await aichats.getChat({ name });
+    }),
     commands.registerCommand('coc-ai.show', async () => {
-      await aichats.getChat(undefined, true);
+      await aichats.getChat({ init: true });
     }),
     commands.registerCommand('coc-ai.stop', async () => {
-      aichats.getChat() // Assume we always interrupt the most recent one
+      aichats.getChat({}) // Assume we always interrupt the most recent one
         .then(chat => chat.abort())
         .catch(e => console.error(e));
     }),

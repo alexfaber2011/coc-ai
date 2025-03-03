@@ -61,8 +61,11 @@ export class AIChats implements Disposable {
 
   includes(bufnr: number) { return this.#bufnrs.includes(bufnr) }
 
-  async getChat(bufnr?: number, init = false): Promise<AIChat> {
+  async getChat({name, bufnr, init = false}: {name?: string, bufnr?: number, init?: boolean}): Promise<AIChat> {
     let chat: AIChat;
+    if (name) {
+      return this.#newChat(name);
+    };
     if (bufnr !== undefined) {
       if (this.#chats.has(bufnr)) {
         chat = this.#chats.get(bufnr)!;
@@ -89,10 +92,12 @@ export class AIChats implements Disposable {
     return this.#chats.get(chat.bufnr)!
   }
 
-  async #newChat() {
-    const name = this.#nextIndex === 1
-      ? '>>> AI chat'
-      : `>>> AI chat ${this.#nextIndex}`;
+  async #newChat(name?: string) {
+    if (name === undefined) {
+      name = this.#nextIndex === 1
+        ? '>>> AI chat'
+        : `>>> AI chat ${this.#nextIndex}`;
+    }
     const chat = await AIChat.create(name);
     this.#nextIndex += 1;
     this.#updateChat(chat);
@@ -112,7 +117,7 @@ export class AIChats implements Disposable {
 export async function hideChat(aichats: AIChats) {
   const bufnr = await nvim.call('bufnr', '%') as number;
   try {
-    (await aichats.getChat(bufnr)).hide();
+    (await aichats.getChat({ bufnr })).hide();
   } catch {}
 }
 
@@ -381,11 +386,13 @@ export class AIChat implements Task, Disposable {
 
       this.bufnr = await nvim.call('bufnr', '%');
 
-      await nvim.command('setlocal buftype=nofile noswapfile ft=aichat');
-      if (this.#keepOpen) {
-        await nvim.command('setlocal bufhidden=hide');
-      } else {
-        await nvim.command('setlocal bufhidden=wipe');
+      if (!this.name.endsWith('.aichat')) {
+        await nvim.command('setlocal buftype=nofile noswapfile ft=aichat');
+        if (this.#keepOpen) {
+          await nvim.command('setlocal bufhidden=hide');
+        } else {
+          await nvim.command('setlocal bufhidden=wipe');
+        }
       }
       if (this.#codeSyntaxEnabled) {
         await nvim.call('setbufvar', [this.bufnr, 'coc_ai_chat_syntax_enabled', 1]);
