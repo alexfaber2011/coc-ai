@@ -40,6 +40,9 @@ model = "deepseek-chat"
 [r1]
 [r1.options]
 model = "deepseek-reasoner"
+endpointUrl = "https://api.deepseek.com/v1/chat/completions"
+requiresAuth = true
+tokenPath = "~/.vim/token.ds"
+maxTokens = 4096
 temperature = 0.6
-requestTimeout = 20
 initialPrompt = ""
