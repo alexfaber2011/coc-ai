@@ -2,6 +2,9 @@ import { workspace, window } from 'coc.nvim';
 import * as os from 'os';
 import * as fs from 'fs';
 import { TextDecoder } from 'util';
+import axios from 'axios';
+import { HttpProxyAgent } from 'http-proxy-agent';
+import { HttpsProxyAgent } from 'https-proxy-agent';
 import { AbortController, mergeDefault } from './utils';
 
 const config = workspace.getConfiguration('coc-ai');
@@ -62,6 +65,8 @@ export class Engine {
       })
     };
     const body = JSON.stringify(data);
+    const httpAgent = this.config.proxy ? new HttpProxyAgent(this.config.proxy) : null;
+    const httpsAgent = this.config.proxy ? new HttpsProxyAgent(this.config.proxy) : null;
 
     if (!this.controller.signal.aborted) this.controller.abort();
     this.controller = new AbortController();
@@ -69,11 +74,16 @@ export class Engine {
       this.controller.abort()
     }, this.config.requestTimeout * 1000);
 
-    const resp = await fetch(this.config.endpointUrl, {
+    const resp = await axios({
       method: 'post',
-      body,
+      url: this.config.endpointUrl,
+      data: body,
       headers,
+      httpAgent,
+      httpsAgent,
       signal: this.controller.signal,
+      timeout: this.config.requestTimeout * 1000,
+      responseType: 'stream',
     });
     clearTimeout(timeout);
     if (resp.status !== 200) {
@@ -84,35 +94,30 @@ export class Engine {
 
   #parseLine(line: string) {
     const parsed = JSON.parse(line);
-    if (parsed.choices?.[0]?.delta?.reasoning_content) {
-      let chunk: IChunk = {
+    let chunk: IChunk
+    if (typeof parsed.choices?.[0]?.delta?.reasoning_content === 'string') {
+      chunk = {
         type: 'reasoning_content',
-        content: parsed.choices[0].delta.reasoning_content as string,
+        content: parsed.choices[0].delta.reasoning_content,
       };
-      return chunk;
-    } else {
-      let chunk: IChunk = {
+    } else if (typeof parsed.choices[0].delta.content === 'string') {
+      chunk = {
         type: 'content',
-        content: parsed.choices[0].delta.content as string,
+        content: parsed.choices[0].delta.content,
       };
-      return chunk;
-    }
+    } else { chunk = { type: 'content', content: '' } }
+    return chunk
   }
 
   async * generate(requestConfig: IEngineConfig, data: IAPIOptions) {
     const resp = await this.#makeRequest(requestConfig, data)
-    if (!resp.body) return;
-
-    const reader = resp.body.getReader();
     const decoder = new TextDecoder('utf-8');
     let buffer = '';
 
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done || this.controller.signal.aborted) break;
+    for await (const value of resp.data) {
+      if (this.controller.signal.aborted) break;
       const data = decoder.decode(value, {stream: true});
       const lines = data.split('\n').filter(line => line.trim() !== '');
-
       for (let line of lines) {
         line = line.startsWith('data: ') ? line.slice('data: '.length) : line;
         if (line === '[DONE]') continue;

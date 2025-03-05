@@ -245,7 +245,10 @@
   },
   "dependencies": {
     "@iarna/toml": "^2.2.5",
+    "axios": "^1.8.1",
     "fast-glob": "^3.3.2",
+    "http-proxy-agent": "^7.0.2",
+    "https-proxy-agent": "^7.0.6",
     "vscode-uri": "^3.0.8"
   }
 }

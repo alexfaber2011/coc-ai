@@ -33,9 +33,9 @@ prompt = "<extra prompt which will be add to user prompt>"
 [<your role name>.options]
 model = "<model name>"
 endpointUrl = "<protocol>://<hostname>/v1/chat/completions"
-requiresAuth = <true/false>
-tokenPath = <path to your token file>
-proxy = "<protocol>://<ip>:<port>"  # NOT available for now
+requiresAuth = true # <true/false>
+tokenPath = "<path to your token file>"
+proxy = "<protocol>://<ip>:<port>"
 maxTokens = 4096  # <max token num>
 temperature = 0.6  # <temperature>
 initialPrompt = "<overrides `initialPrompt` in coc-settings>"
@@ -109,7 +109,7 @@ NOTE:
 
 ## TODOs
 
-- [ ] proxy for post request
+- [x] proxy for api request
 - [x] option for chat whether keep track with cursor
 - [x] implement ai complete
 - [x] implement ai edit

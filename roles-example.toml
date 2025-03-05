@@ -46,3 +46,12 @@ tokenPath = "~/.vim/token.ds"
 maxTokens = 4096
 temperature = 0.6
 initialPrompt = ""
+
+# example for proxy
+[4om]
+[4om.options]
+model = "gpt-4o-mini"
+endpointUrl = "https://api.openai.com/v1/chat/completions"
+requiresAuth = true
+tokenPath = "~/.vim/token.oa"
+proxy = "http://127.0.0.1:1081"
