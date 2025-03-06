@@ -26,6 +26,10 @@ export async function activate(context: ExtensionContext) {
       const aichat = await aichats.getChat({ bufnr, init: bufnr ? false : true });
       await aichat.run(selection, rawPrompt);
     }),
+    commands.registerCommand('coc-ai.newChat', async (selection: string, rawPrompt: string) => {
+      const aichat =await aichats.newChat();
+      await aichat.run(selection, rawPrompt);
+    }),
     commands.registerCommand('coc-ai.edit', async (selection: string, rawPrompt: string) => {
       await aiedit.run(selection, rawPrompt);
     }),
@@ -37,7 +41,7 @@ export async function activate(context: ExtensionContext) {
     }),
     commands.registerCommand('coc-ai.attachChat', async() => {
       const name = await nvim.call('bufname', '%');
-      await aichats.getChat({ name });
+      await aichats.newChat(name);
     }),
     commands.registerCommand('coc-ai.show', async () => {
       await aichats.getChat({ init: true });

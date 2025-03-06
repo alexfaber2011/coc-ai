@@ -61,11 +61,8 @@ export class AIChats implements Disposable {
 
   includes(bufnr: number) { return this.#bufnrs.includes(bufnr) }
 
-  async getChat({name, bufnr, init = false}: {name?: string, bufnr?: number, init?: boolean}): Promise<AIChat> {
+  async getChat({ bufnr, init = false }: { bufnr?: number, init?: boolean }): Promise<AIChat> {
     let chat: AIChat;
-    if (name) {
-      return this.#newChat(name);
-    };
     if (bufnr !== undefined) {
       if (this.#chats.has(bufnr)) {
         chat = this.#chats.get(bufnr)!;
@@ -80,7 +77,7 @@ export class AIChats implements Disposable {
         chat = this.#chats.get(bufnr)!;
         if (init) chat.show();
       } else {
-        chat = await this.#newChat();
+        chat = await this.newChat();
       }
     }
     if (chat.bufnr === -1) {
@@ -92,7 +89,7 @@ export class AIChats implements Disposable {
     return this.#chats.get(chat.bufnr)!
   }
 
-  async #newChat(name?: string) {
+  async newChat(name?: string) {
     if (name === undefined) {
       name = this.#nextIndex === 1
         ? '>>> AI chat'

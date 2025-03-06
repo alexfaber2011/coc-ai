@@ -70,12 +70,12 @@ function! coc_ai#AIChatRun(uses_range, ...) range abort
   call CocActionAsync('runCommand', 'coc-ai.chat', l:selection, l:instruction)
 endfunction
 
-"TODO Start a new chat
-" a:1 - optional preset shorcut (below, right, tab)
-function! coc_ai#AINewChatRun(...) abort
-  let l:open_conf = a:0 > 0 ? "preset_" . a:1 : g:vim_ai_chat['ui']['open_chat_command']
-  call s:OpenChatWindow(l:open_conf, 1)
-  call coc_ai#AIChatRun(0, {})
+function! coc_ai#AINewChatRun(uses_range, ...) range abort
+  let l:instruction = a:0 > 0 ? a:1 : ""
+  let l:is_selection = a:uses_range && a:firstline == line("'<") && a:lastline == line("'>")
+  let l:selection = s:GetSelectionOrRange(l:is_selection, a:uses_range, a:firstline, a:lastline)
+
+  call CocActionAsync('runCommand', 'coc-ai.newChat', l:selection, l:instruction)
 endfunction
 
 "TODO Repeat last AI command
