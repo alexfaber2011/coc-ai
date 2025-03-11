@@ -34,6 +34,7 @@ interface IEngineConfig {
   requiresAuth: boolean,
   initialPrompt: string,
   tokenPath: string,
+  tokenType?: string, // e.g. 'Bearer', 'Bot'
   rolesConfigPath: string,
 
   // chat
