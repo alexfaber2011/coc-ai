@@ -60,7 +60,8 @@ export class Engine {
     const headers = {
       'Content-Type': 'application/json',
       ...(this.config.requiresAuth && {
-        'Authorization': `${this.config.tokenType ?? 'Bearer'} ${this.token.apiKey}`,
+        //'Authorization': `${this.config.tokenType ?? 'Bearer'} ${this.token.apiKey}`,
+        'Authorization': `Bot ${this.token.apiKey}`,
         ...(this.token.orgId && { 'OpenAI-Organization': this.token.orgId })
       })
     };
